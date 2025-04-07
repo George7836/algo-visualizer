@@ -1,22 +1,20 @@
-function Rectangle({ num }: { num: number }) {
+interface RectangleProps {
+  num: number;
+  index: number;
+  color: string;
+}
+
+function Rectangle({ num, index, color }: RectangleProps) {
   return (
-    <svg width="40" height="40" role="img">
-      <g>
-        <rect width="40" height="40" fill="none" stroke="black" />
-        <text
-          x="50%"
-          y="50%"
-          alignmentBaseline="middle"
-          textAnchor="middle"
-          fontFamily="Verdana"
-          fontSize="12"
-          fill="black"
-          data-testid="rectangle"
-        >
-          {num}
-        </text>
-      </g>
-    </svg>
+    <g data-testid="rectangle-group">
+      <rect stroke="black" fill={color} x={index * 40} y={0} width={40} height={40} data-testid="rectangle"></rect>
+      <text x={index * 40 + 20} y={22} textAnchor="middle" dominantBaseline="middle" data-testid="text">
+        {num}
+      </text>
+      <text fill="gray" x={index * 40 + 20} y={55} textAnchor="middle" dominantBaseline="middle">
+        {index}
+      </text>
+    </g>
   );
 }
 

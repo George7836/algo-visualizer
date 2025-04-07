@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import Canvas from './components/Canvas';
+import RectanglesList from './components/RectanglesList';
+import { useGenerator } from './hooks/useGenerator';
+import { binarySearch } from './utils/binarySearch';
+import ButtonList from './components/ButtonList';
+
+const SEARCH_VALUE = 3;
+const SORTED_NUMBERS = [1, 3, 7, 8, 10, 12, 13, 17, 25, 27, 29, 35, 40, 45];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { iteratorResult, next, back } = useGenerator(binarySearch(SORTED_NUMBERS, SEARCH_VALUE));
+
+  const isGeneratorDone = iteratorResult?.done;
+  const canPassValue = !isGeneratorDone && iteratorResult?.value;
+
+  const guess = canPassValue ? iteratorResult.value.guess : null;
+  const interval = canPassValue ? { start: iteratorResult.value.start, end: iteratorResult.value.end } : null;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="wrapper">
+      <ButtonList next={next} back={back} />
+      <Canvas>
+        <text y={-20}>Looking for: {SEARCH_VALUE}</text>
+        <RectanglesList
+          numbers={SORTED_NUMBERS}
+          guess={isGeneratorDone ? SEARCH_VALUE : guess}
+          interval={isGeneratorDone ? { start: iteratorResult.value, end: iteratorResult.value } : interval}
+        />
+      </Canvas>
+    </div>
+  );
 }
 
-export default App
+export default App;

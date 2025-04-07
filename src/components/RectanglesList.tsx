@@ -1,5 +1,5 @@
-import { Fragment } from 'react/jsx-runtime';
 import { colorRectangle } from '../utils/color';
+import Rectangle from './Rectangle';
 
 interface RectanglesListProps {
   numbers: number[];
@@ -16,17 +16,7 @@ function RectanglesList({ numbers, guess, interval }: RectanglesListProps) {
       {numbers.map((number, index) => {
         const rectangleColor = colorRectangle(number, index, guess, interval);
 
-        return (
-          <Fragment key={`${number}-${index}`}>
-            <rect stroke="black" fill={rectangleColor} x={index * 40} y={0} width={40} height={40}></rect>
-            <text x={index * 40 + 20} y={22} textAnchor="middle" dominantBaseline="middle">
-              {number}
-            </text>
-            <text fill="gray" x={index * 40 + 20} y={55} textAnchor="middle" dominantBaseline="middle">
-              {index}
-            </text>
-          </Fragment>
-        );
+        return <Rectangle key={`${number}-${index}`} num={number} index={index} color={rectangleColor} />;
       })}
     </svg>
   );
