@@ -1,17 +1,17 @@
 interface GeneratorHistoryManager<Value, Return> {
   add: (element: IteratorResult<Value, Return>) => void;
-  getCurrent: () => IteratorResult<Value, Return>;
-  getNext: () => IteratorResult<Value, Return> | undefined;
-  getPrevious: () => IteratorResult<Value, Return> | undefined;
+  getCurrent: () => IteratorResult<Value, Return> | null;
+  getNext: () => IteratorResult<Value, Return> | null;
+  getPrevious: () => IteratorResult<Value, Return> | null;
   isFinished: () => boolean;
   readonly length: number;
 }
 
 class HistoryManager<Value, Return> implements GeneratorHistoryManager<Value, Return> {
-  private history: IteratorResult<Value, Return>[] = [];
+  private history: (IteratorResult<Value, Return> | null)[] = [];
   private index = 0;
 
-  add(element: IteratorResult<Value, Return>) {
+  add(element: IteratorResult<Value, Return> | null) {
     this.history.push(element);
     this.index = this.length - 1;
   }
@@ -23,7 +23,7 @@ class HistoryManager<Value, Return> implements GeneratorHistoryManager<Value, Re
   getNext() {
     const element = this.history[this.index + 1];
 
-    if (!element) return undefined;
+    if (!element) return null;
 
     this.index += 1;
 
@@ -33,7 +33,7 @@ class HistoryManager<Value, Return> implements GeneratorHistoryManager<Value, Re
   getPrevious() {
     const element = this.history[this.index - 1];
 
-    if (!element) return undefined;
+    if (!element && element !== null) return null;
 
     this.index -= 1;
 
@@ -54,7 +54,9 @@ export class EnhancedGenerator<Value, Return, Next> {
   constructor(
     private generator: Generator<Value, Return, Next>,
     private historyManager: HistoryManager<Value, Return> = new HistoryManager(),
-  ) {}
+  ) {
+    this.historyManager.add(null);
+  }
 
   next(...args: [] | [Next]) {
     const nextHistoryValue = this.historyManager.getNext();
@@ -70,10 +72,7 @@ export class EnhancedGenerator<Value, Return, Next> {
   }
 
   back() {
-    const previousValue = this.historyManager.getPrevious();
-    if (previousValue) return previousValue;
-
-    return this.historyManager.getCurrent();
+    return this.historyManager.getPrevious();
   }
 
   return(value: Return) {

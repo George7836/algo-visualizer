@@ -15,8 +15,10 @@ export function* binarySearch(array: number[], element: number) {
       return mid;
     } else if (guess > element) {
       end = mid - 1;
+      yield { start, end, mid, guess };
     } else {
       start = mid + 1;
+      yield { start, end, mid, guess };
     }
   }
 

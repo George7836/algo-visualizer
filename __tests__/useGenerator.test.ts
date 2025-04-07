@@ -12,7 +12,7 @@ describe('useGenerator', () => {
 
   test('initial value is null', () => {
     const { result } = renderHook(() => useGenerator(foo()));
-    expect(result.current.value).toBeNull();
+    expect(result.current.iteratorResult).toBeNull();
   });
 
   test('next updates value correctly', () => {
@@ -20,13 +20,13 @@ describe('useGenerator', () => {
 
     act(() => result.current.next());
 
-    expect(result.current.value).toEqual({ value: 1, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 1, done: false });
 
     act(() => {
       result.current.next();
     });
 
-    expect(result.current.value).toEqual({ value: 2, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 2, done: false });
   });
 
   test('back updates value to previous one', () => {
@@ -38,16 +38,16 @@ describe('useGenerator', () => {
       result.current.next();
     });
 
-    expect(result.current.value).toEqual({ value: 3, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 3, done: false });
 
     act(() => {
       result.current.back();
     });
 
-    expect(result.current.value).toEqual({ value: 2, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 2, done: false });
   });
 
-  test('back does not go before the first value', () => {
+  test('back returns null if it goes before the first value', () => {
     const { result } = renderHook(() => useGenerator(foo()));
 
     act(() => {
@@ -56,7 +56,7 @@ describe('useGenerator', () => {
       result.current.back();
     });
 
-    expect(result.current.value).toEqual({ value: 1, done: false });
+    expect(result.current.iteratorResult).toBeNull();
   });
 
   test('next returns final value when generator is done', () => {
@@ -69,7 +69,7 @@ describe('useGenerator', () => {
       result.current.next();
     });
 
-    expect(result.current.value).toEqual({ value: 4, done: true });
+    expect(result.current.iteratorResult).toEqual({ value: 4, done: true });
   });
 
   test('handles empty generator correctly', () => {
@@ -81,7 +81,7 @@ describe('useGenerator', () => {
       result.current.next();
     });
 
-    expect(result.current.value).toEqual({ value: undefined, done: true });
+    expect(result.current.iteratorResult).toEqual({ value: undefined, done: true });
   });
 
   test('next works correctly after back', () => {
@@ -94,7 +94,7 @@ describe('useGenerator', () => {
       result.current.next();
     });
 
-    expect(result.current.value).toEqual({ value: 2, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 2, done: false });
   });
 
   test('handles generator exceptions', () => {
@@ -109,7 +109,7 @@ describe('useGenerator', () => {
       result.current.next();
     });
 
-    expect(result.current.value).toEqual({ value: 1, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 1, done: false });
 
     expect(() => {
       act(() => {
@@ -125,10 +125,10 @@ describe('useGenerator', () => {
       result.current.next();
     });
 
-    expect(result.current.value).toEqual({ value: 1, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 1, done: false });
 
     rerender();
 
-    expect(result.current.value).toEqual({ value: 1, done: false });
+    expect(result.current.iteratorResult).toEqual({ value: 1, done: false });
   });
 });

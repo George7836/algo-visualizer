@@ -52,10 +52,10 @@ function Canvas({ children }: CanvasProps) {
     <svg ref={svgRef} width="100vw" height="100vh" viewBox="0 0 100vw 100vh">
       <defs>
         <pattern id="grid" ref={patternGridRef} patternUnits="userSpaceOnUse" width="100" height="100">
-          <rect width="100%" height="100%" fill="none" stroke="lightgray" />
+          <rect width="100%" height="100%" fill="#F4F4F4" stroke="lightgray" />
         </pattern>
         <pattern id="inner-grid" ref={patternInnerGridRef} patternUnits="userSpaceOnUse" width="10" height="10">
-          <rect width="100%" height="100%" fill="none" stroke="lightgray" />
+          <rect width="100%" height="100%" fill="#F4F4F4" stroke="lightgray" />
         </pattern>
       </defs>
       <rect fill="url(#grid)" width="100%" height="100%" />

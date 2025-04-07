@@ -36,22 +36,26 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  border-radius: 5px;
+  color: #1a1a1a;
+  border: 0;
+  padding: 12px 18px;
+  font-size: 16px;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  background-color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 button:hover {
-  border-color: #646cff;
+  background-color: #979dfd;
+  transition: background-color 0.25s;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+button.is-playing {
+  background-color: #979dfd;
 }
 
 @media (prefers-color-scheme: light) {
@@ -62,7 +66,28 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.button-list {
+  display: flex;
+  background-color: #ffffff;
+  position: absolute;
+  padding: 3px;
+  top: 10px;
+  left: 10px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 0px 11px 0px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 0px 0px 11px 0px rgba(34, 60, 80, 0.2);
+  box-shadow: 0px 0px 11px 0px rgba(34, 60, 80, 0.2);
+}
+
+.arrow-next-icon {
+  transform: rotate(180deg);
 }

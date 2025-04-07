@@ -1,59 +1,35 @@
-import { useEffect, useRef } from 'react';
-import * as d3 from 'd3';
-
-enum RECTANGLE_STATE {
-  SELECTED = 'selected',
-  SORTED_OUT = 'sorted-out',
-}
-
-interface Rectangle {
-  value: number;
-  state: RECTANGLE_STATE;
-}
+import { Fragment } from 'react/jsx-runtime';
+import { colorRectangle } from '../utils/color';
 
 interface RectanglesListProps {
-  rectangles: Rectangle[];
+  numbers: number[];
+  interval: {
+    start: number;
+    end: number;
+  } | null;
+  guess: number | null;
 }
 
-function RectanglesList({ numbers }: { numbers: number[] }) {
-  const listRef = useRef(null);
+function RectanglesList({ numbers, guess, interval }: RectanglesListProps) {
+  return (
+    <svg>
+      {numbers.map((number, index) => {
+        const rectangleColor = colorRectangle(number, index, guess, interval);
 
-  useEffect(() => {
-    if (!listRef.current) return;
-
-    const svg = d3.select<SVGSVGElement, unknown>(listRef.current);
-    const rectangles = svg.selectAll('rect').data(numbers);
-
-    rectangles
-      .enter()
-      .append('rect')
-      .style('stroke', 'black')
-      .style('fill', 'none')
-      .attr('x', (_d, i) => i * 50)
-      .attr('y', 0)
-      .attr('width', 40)
-      .attr('height', 40);
-
-    rectangles
-      .enter()
-      .append('text')
-      .attr('x', (_d, i) => i * 50 + 20)
-      .attr('y', 22)
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'middle')
-      .text((d) => d);
-
-    rectangles
-      .enter()
-      .append('text')
-      .attr('x', (_d, i) => i * 50 + 20)
-      .attr('y', 55)
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'middle')
-      .text((_d, i) => i);
-  }, [numbers]);
-
-  return <svg ref={listRef}></svg>;
+        return (
+          <Fragment key={`${number}-${index}`}>
+            <rect stroke="black" fill={rectangleColor} x={index * 40} y={0} width={40} height={40}></rect>
+            <text x={index * 40 + 20} y={22} textAnchor="middle" dominantBaseline="middle">
+              {number}
+            </text>
+            <text fill="gray" x={index * 40 + 20} y={55} textAnchor="middle" dominantBaseline="middle">
+              {index}
+            </text>
+          </Fragment>
+        );
+      })}
+    </svg>
+  );
 }
 
 export default RectanglesList;
